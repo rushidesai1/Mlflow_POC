@@ -1,0 +1,4 @@
+artifact_location: file:///Users/desrushi/Amazon/Code/poc/mlflow/MlFlowPOC/mlruns/2
+experiment_id: '2'
+lifecycle_stage: active
+name: mnist_poc_2

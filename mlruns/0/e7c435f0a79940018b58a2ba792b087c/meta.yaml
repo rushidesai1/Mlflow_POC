@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/desrushi/Amazon/Code/poc/mlflow/MlFlowPOC/mlruns/0/e7c435f0a79940018b58a2ba792b087c/artifacts
+end_time: 1607402743571
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: e7c435f0a79940018b58a2ba792b087c
+run_uuid: e7c435f0a79940018b58a2ba792b087c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1607402710320
+status: 4
+tags: []
+user_id: desrushi
