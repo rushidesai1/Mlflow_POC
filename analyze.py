@@ -6,21 +6,12 @@ import matplotlib.pyplot as plt
 
 from mlflow.tracking import MlflowClient
 
-from pathlib import Path
+from constants import METRIC_CEILING
 
-from mock_metrics import get_mock_data, METRIC_CEILING
-
-# data_directory = Path("../data")
-# data_filename = data_directory / "20_11_17_offpolicy_replication_report.xlsx"
-
-# df = pd.read_excel(data_filename, sheet_name=1)
-
-# plot params
 colors = ['#F8766D', '#00B0F6']
 
 
 def plot(domain, intent, ys):
-    # fig, axes = plt.subplots(1, len(df.operation.unique()), sharex = 'row', sharey = 'row', figsize = (9, 3))
     fig = plt.figure()
     axes = fig.add_subplot(1, 1, 1)
     fig.suptitle(f"{domain}:{intent}", size=16)
@@ -74,7 +65,6 @@ def main():
     args = parser.parse_args()
 
     data = get_metrics_data()
-    # data = get_mock_data()
 
     n = min(args.n, 20)
 
@@ -83,6 +73,7 @@ def main():
         plot_multi(data[:n])
     else:
         for (domain, intent, metrics) in data[:n]:
+            print(f"{metrics[0]} sra {domain}:{intent}\n{metrics[0]} nd_sra")
             plot(domain, intent, metrics)
 
 
