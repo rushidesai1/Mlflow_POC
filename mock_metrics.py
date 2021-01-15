@@ -6,7 +6,7 @@ from typing import Dict
 
 # data params
 METRIC_CEILING = 100
-NUM_RUNS = 6
+NUM_RUNS = 7
 
 # distribution params
 RUNS_TO_CONVERGE = 10

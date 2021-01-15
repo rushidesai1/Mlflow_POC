@@ -4,6 +4,8 @@ import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from mlflow.tracking import MlflowClient
+
 from pathlib import Path
 
 from mock_metrics import get_mock_data, METRIC_CEILING
@@ -27,7 +29,12 @@ def plot(domain, intent, ys):
     axes.set_ylabel(f"Accuracy (%)")
     axes.set_xlabel(f"Experiment Run")
     for i, y in enumerate(ys):
-        axes.plot(range(y.size), y, color=colors[i], label=metric_labels[i])
+        try:
+            axes.plot(range(y.size), y,
+                      color=colors[i], label=metric_labels[i])
+        except AttributeError:
+            axes.plot(range(len(y)), y,
+                      color=colors[i], label=metric_labels[i])
 
     axes.set_ylim([None, METRIC_CEILING])
     axes.legend()
@@ -46,8 +53,12 @@ def plot_multi(data):
         axes[i].title.set_size(12)
 
         for j, y in enumerate(metrics):
-            axes[i].plot(range(y.size), y, color=colors[j],
-                         label=metric_labels[j])
+            try:
+                axes[i].plot(range(y.size), y, color=colors[j],
+                             label=metric_labels[j])
+            except AttributeError:
+                axes[i].plot(range(len(y)), y, color=colors[j],
+                             label=metric_labels[j])
 
         axes[i].set_ylim([None, METRIC_CEILING])
         axes[i].legend()
@@ -62,7 +73,8 @@ def main():
     parser = fetch_parser()
     args = parser.parse_args()
 
-    data = get_mock_data()
+    data = get_metrics_data()
+    # data = get_mock_data()
 
     n = min(args.n, 20)
 
@@ -88,6 +100,61 @@ def fetch_parser():
     )
     parser.set_defaults(multigraph=False)
     return parser
+
+
+def get_metrics_data():
+    # Get experiment
+    client = MlflowClient()
+    experiment = client.list_experiments()[1]
+    runs = client.list_run_infos("1")
+
+    first_run = client.get_run(runs[0].run_id)
+    num_metrics = get_num_metrics(first_run)
+    df = get_df(first_run)
+    # df = [None] * num_metrics
+
+    for i, run in enumerate(runs):
+        run = client.get_run(run.run_id)
+        parse_run_metrics(df, run.data.metrics)
+
+    return df
+
+
+def get_num_metrics(run):
+    return len(run.data.metrics.keys()) / 2
+
+
+def get_df(run):
+    df = parse_run_metrics_for_df(run.data.metrics)
+    return df
+
+
+def parse_run_metrics_for_df(metrics):
+    df = []
+    for k, v in metrics.items():
+        domain, intent, metric = parse_run_metric_key(k)
+        if metric == "SRA":
+            data = (domain, intent, [[], []])
+            df.append(data)
+    return sorted(df)
+
+
+def parse_run_metrics(df, metrics):
+    for k, v in metrics.items():
+        domain, intent, metric = parse_run_metric_key(k)
+        # TODO: Fix this n^2 hack
+        for datum in df:
+            if (domain != datum[0] or intent != datum[1]):
+                continue
+            if (metric == "SRA"):
+                datum[2][0].append(v)
+            elif (metric == "ND_SRA"):
+                datum[2][1].append(v)
+            break
+
+
+def parse_run_metric_key(key):
+    return key.split(".")
 
 
 if __name__ == "__main__":
