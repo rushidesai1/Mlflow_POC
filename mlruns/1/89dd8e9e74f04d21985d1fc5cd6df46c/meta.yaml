@@ -1,0 +1,15 @@
+artifact_uri: file:///storage/home/ec2-user/workspaces/idhack/src/AlexaDRScience/src/mlruns/1/89dd8e9e74f04d21985d1fc5cd6df46c/artifacts
+end_time: 1610649289890
+entry_point_name: ''
+experiment_id: '1'
+lifecycle_stage: active
+name: ''
+run_id: 89dd8e9e74f04d21985d1fc5cd6df46c
+run_uuid: 89dd8e9e74f04d21985d1fc5cd6df46c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1610649289758
+status: 3
+tags: []
+user_id: ec2-user

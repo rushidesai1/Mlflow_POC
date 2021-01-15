@@ -1,4 +1,4 @@
-artifact_location: file:///Users/desrushi/Amazon/Code/poc/mlflow/MlFlowPOC/mlruns/1
+artifact_location: file:///storage/home/ec2-user/workspaces/idhack/src/AlexaDRScience/src/mlruns/1
 experiment_id: '1'
 lifecycle_stage: active
-name: mnist_poc
+name: test_exp
